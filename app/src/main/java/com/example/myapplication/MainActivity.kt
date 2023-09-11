@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
         //Intent intento = new Intent(packageContext: MainActivity.this, AboutActivity.class)
 
         val intentAbout = Intent(this, AboutActivity::class.java)
-        startActivity(intentAbout);
+        //startActivity(intentAbout);
 
 
     }
