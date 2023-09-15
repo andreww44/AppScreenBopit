@@ -79,7 +79,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="C:\Users\monsa\Documents\PortfoliosGame\AppScreenBopit\resourses\bopit.png" />
+                                                <entry key="imagePath" value="C:\Users\monsa\Documents\PortfoliosGame\AppScreenBopit\resourses\1200px-Utalca.svg.png" />
                                                 <entry key="scalingPercent" value="60" />
                                               </map>
                                             </option>
@@ -114,6 +114,7 @@
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
                                       <entry key="backgroundColor" value="000000" />
+                                      <entry key="foregroundLayerName" value="utal_logo" />
                                     </map>
                                   </option>
                                 </PersistentState>
