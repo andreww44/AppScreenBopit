@@ -21,7 +21,7 @@ class SplasScreen : AppCompatActivity() {
 
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        val value = sharedPreferences.getString("splash_time", "2500")
+        val value = sharedPreferences.getString("splash_time", "1500")
 
         Log.i(tagLog, "Value of splash_time:" + value)
 

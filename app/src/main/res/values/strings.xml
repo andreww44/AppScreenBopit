@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">Bopit</string>
-    <string name="app_description"> Este proyecto siiiiii!!!!!</string>
+    <string name="app_description"> Este trabajo consta en replicar el famoso juego hecho por la compañia Hasbro BOPIT en una version para celulares, en donde se aproveche
+     las caracteristicas unicas con las que cuentan los dispositvos Moviles</string>
+    <string name="about_me">Estudiante universitario de la uiniversidad de Talca, mucho tiempo para perderlo, poco tiempo para hacer trabajos</string>
+    <string name="nombre_desarrollador">Alvaro Monsalve</string>
+    <string name="correo">amonsalve20@alumnos.utalca.cl</string>
+
+
 
 </resources>

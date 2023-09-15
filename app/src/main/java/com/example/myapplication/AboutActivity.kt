@@ -15,6 +15,7 @@ class AboutActivity : AppCompatActivity() {
         val boton = findViewById<Button>(R.id.boton2)
 
         boton.setOnClickListener{
+            finish()
             startActivity(intentMain);
         }
     }
