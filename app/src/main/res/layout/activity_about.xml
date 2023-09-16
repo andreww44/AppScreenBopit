@@ -15,8 +15,8 @@
 
     <Button
         android:id="@+id/boton2"
-        android:layout_width="380dp"
-        android:layout_height="64dp"
+        android:layout_width="347dp"
+        android:layout_height="75dp"
         android:layout_marginBottom="28dp"
         android:backgroundTint="#000000"
         android:text="Volver"
@@ -28,32 +28,34 @@
         android:id="@+id/imageView2"
         android:layout_width="188dp"
         android:layout_height="175dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="120dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="152dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/micara" />
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="369dp"
-        android:layout_height="30dp"
+        android:layout_width="340dp"
+        android:layout_height="43dp"
         app:layout_constraintBottom_toTopOf="@+id/imageView2"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.523"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.842"
+        app:layout_constraintVertical_bias="1.0"
         tools:text="@string/nombre_desarrollador" />
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="368dp"
-        android:layout_height="56dp"
-        android:layout_marginEnd="24dp"
+        android:layout_width="353dp"
+        android:layout_height="54dp"
+        android:layout_marginEnd="36dp"
         android:text="@string/about_me"
         app:layout_constraintBottom_toTopOf="@+id/textView8"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/textView7"
@@ -62,29 +64,31 @@
         android:text="@string/correo"
         app:layout_constraintBottom_toTopOf="@+id/textView2"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/imageView2"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintVertical_bias="0.608" />
 
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="193dp"
-        android:layout_height="219dp"
-        android:layout_marginEnd="4dp"
+        android:layout_width="153dp"
+        android:layout_height="177dp"
+        android:layout_marginEnd="32dp"
         app:layout_constraintBottom_toTopOf="@+id/boton2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2"
-        app:layout_constraintVertical_bias="0.072"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@mipmap/ic_launcher_foreground" />
 
     <TextView
         android:id="@+id/textView8"
         android:layout_width="186dp"
         android:layout_height="217dp"
-        android:layout_marginBottom="76dp"
+        android:layout_marginBottom="32dp"
         android:text="@string/app_description"
         app:layout_constraintBottom_toTopOf="@+id/boton2"
         app:layout_constraintEnd_toStartOf="@+id/imageView3"
-        app:layout_constraintHorizontal_bias="0.571"
+        app:layout_constraintHorizontal_bias="0.575"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,8 +21,8 @@
 
     <Button
         android:id="@+id/Jugar"
-        android:layout_width="380dp"
-        android:layout_height="64dp"
+        android:layout_width="328dp"
+        android:layout_height="66dp"
         android:layout_marginBottom="8dp"
         android:backgroundTint="#000000"
         android:text="Jugar"
@@ -46,8 +46,8 @@
 
     <Button
         android:id="@+id/Salir"
-        android:layout_width="380dp"
-        android:layout_height="64dp"
+        android:layout_width="328dp"
+        android:layout_height="66dp"
         android:layout_marginBottom="64dp"
         android:backgroundTint="#000000"
         android:text="Salir"
@@ -58,12 +58,14 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_width="407dp"
-        android:layout_height="63dp"
+        android:layout_width="396dp"
+        android:layout_height="62dp"
+        android:layout_marginTop="16dp"
         android:minHeight="?attr/actionBarSize"
         android:scrollbarThumbHorizontal="@color/blue"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.466"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
