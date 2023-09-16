@@ -4,6 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#000000"
+    android:backgroundTint="#FFFFFF"
+    android:foregroundTint="#FFFFFF"
+    android:scrollbarThumbHorizontal="@color/red"
+    android:scrollbarThumbVertical="@color/red"
     tools:context=".MainActivity">
 
     <androidx.constraintlayout.widget.Guideline
@@ -18,16 +23,15 @@
         android:id="@+id/Jugar"
         android:layout_width="380dp"
         android:layout_height="64dp"
+        android:layout_marginBottom="8dp"
         android:backgroundTint="#000000"
         android:text="Jugar"
         app:iconPadding="8dp"
         app:iconTint="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/Salir"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.483"
+        app:layout_constraintHorizontal_bias="0.516"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.415"
         tools:text="Jugar" />
 
     <ImageView
@@ -36,67 +40,31 @@
         android:layout_height="259dp"
         app:layout_constraintBottom_toTopOf="@+id/Jugar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
         app:srcCompat="@mipmap/ic_launcher_foreground" />
-
-    <Button
-        android:id="@+id/About"
-        android:layout_width="380dp"
-        android:layout_height="64dp"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="#000000"
-        android:text="About"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.516"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Jugar" />
-
-    <Button
-        android:id="@+id/Historial"
-        android:layout_width="380dp"
-        android:layout_height="64dp"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="#000000"
-        android:text="Historial"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.516"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/About" />
-
-    <Button
-        android:id="@+id/Instrucciones"
-        android:layout_width="380dp"
-        android:layout_height="64dp"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="#000000"
-        android:text="Instrucciones"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Historial" />
-
-    <Button
-        android:id="@+id/Preferencias"
-        android:layout_width="380dp"
-        android:layout_height="64dp"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="#000000"
-        android:text="Preferencias"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Instrucciones" />
 
     <Button
         android:id="@+id/Salir"
         android:layout_width="380dp"
         android:layout_height="64dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="64dp"
         android:backgroundTint="#000000"
         android:text="Salir"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.516"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="407dp"
+        android:layout_height="63dp"
+        android:minHeight="?attr/actionBarSize"
+        android:scrollbarThumbHorizontal="@color/blue"
+        android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Preferencias" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
