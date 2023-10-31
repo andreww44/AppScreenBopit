@@ -89,12 +89,10 @@ class Juego : AppCompatActivity() {
         bVictory.setOnClickListener(){
             victorySong.start()
             backMusic.pause()
-            defeatSong.pause()
         }
 
         bDefeat.setOnClickListener(){
             defeatSong.start()
-            backMusic.pause()
             victorySong.pause();
         }
 
@@ -102,7 +100,9 @@ class Juego : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        backMusic.pause();
+        backMusic.pause()
+        victorySong.pause()
+        defeatSong.pause()
     }
 
     inner class GestureListener : GestureDetector.SimpleOnGestureListener() {
