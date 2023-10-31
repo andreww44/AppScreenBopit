@@ -3,14 +3,11 @@ package com.example.myapplication
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import org.w3c.dom.Text
-import kotlin.system.exitProcess
 
 class Preferencias : AppCompatActivity() {
 
@@ -25,9 +22,9 @@ class Preferencias : AppCompatActivity() {
 
         val loginButton = findViewById<Button>(R.id.Login)
 
-        val user = findViewById<EditText>(R.id.User);
+        val user = findViewById<EditText>(R.id.UserLog);
         val password = findViewById<EditText>(R.id.Password);
-        val userlog = findViewById<TextView>(R.id.UserLog);
+        val userlog = findViewById<TextView>(R.id.User);
 
         loginButton.setOnClickListener{
             if(user.getText().toString().equals(u2.toString()) && password.getText().toString().equals(p2.toString())){
