@@ -1,21 +1,23 @@
 package com.example.myapplication
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.widget.Button
+import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.media.MediaPlayer
-import android.util.Log
+import android.os.Bundle
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.view.GestureDetectorCompat
+import androidx.appcompat.app.AppCompatActivity
 
 private const val DEBUG_TAG = "Gestures"
-class Juego : AppCompatActivity() {
+class Juego : AppCompatActivity(), SensorEventListener {
 
     private var musicOn = true;
 
@@ -28,31 +30,54 @@ class Juego : AppCompatActivity() {
     private lateinit var bVictory: Button
     private lateinit var bDefeat: Button
 
+    private lateinit var linear_acceleration: Array<Double>
+
     private lateinit var gestureDetector: GestureDetector
 
     private lateinit var textViewTouchEvent: TextView
     private lateinit var listViewTouchEventHistory: ListView
     private lateinit var touchEventHistory: ArrayList<String>
     private lateinit var historyAdapter: ArrayAdapter<String>
+
+
+    private lateinit var sensorManager: SensorManager
+    private lateinit var sensor: Sensor
+    //private lateinit var sensorEventListener: SensorEventListener
+    //ivate lateinit var sensorEventLsitener: SensorEventListener
+
+    private lateinit var axi_x: TextView
+    private lateinit var axi_y: TextView
+    private lateinit var axi_z: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_juego)
 
-        gestureDetector = GestureDetector(this, GestureListener())
-        //mDetector.setOnDoubleTapListener(this)
+        sensorManager =getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
+        gestureDetector = GestureDetector(this, GestureListener())
+
+        if(sensor != null){
+            finish();
+        }
+        val a = sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
+
+        //ToolBar
         setSupportActionBar(findViewById(R.id.toolbar3))
 
+        //Crear Lsita
         textViewTouchEvent = findViewById(R.id.textViewTouchEvent)
         listViewTouchEventHistory = findViewById(R.id.listViewTouchEventHistory)
 
-        //Creating the list
+        axi_x = findViewById(R.id.AxiX)
+        axi_y = findViewById(R.id.AxiY)
+        axi_z = findViewById(R.id.AxiZ)
+
         touchEventHistory = ArrayList()
         historyAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, touchEventHistory)
         listViewTouchEventHistory.adapter = historyAdapter
 
-        val intentMain = Intent(this, MainActivity::class.java)
-
+        //MediaPlayer
         backMusic = MediaPlayer.create(applicationContext, R.raw.laser)
         defeatSong = MediaPlayer.create(applicationContext, R.raw.fallo)
         victorySong = MediaPlayer.create(applicationContext, R.raw.victoria)
@@ -64,6 +89,8 @@ class Juego : AppCompatActivity() {
 
         backMusic.start()
         backMusic.isLooping = true;
+
+        //sensor.
 
     }
 
@@ -117,6 +144,34 @@ class Juego : AppCompatActivity() {
         }
     }
 
+    /*
+    inner class sensorEventListener: SensorEventListener{
+
+        override fun onSensorChanged(event: SensorEvent) {
+
+            val alpha: Float = 0.8f
+            var gravity = 9.8;
+
+            // Isolate the force of gravity with the low-pass filter. val gravity[3]: Float;
+            var gravity_1 = alpha * gravity + (1 - alpha) * event.values[0]
+            var gravity_2 = alpha * gravity + (1 - alpha) * event.values[1]
+            var gravity_3 = alpha * gravity + (1 - alpha) * event.values[2]
+
+            // Remove the gravity contribution with the high-pass filter.
+            linear_acceleration[0] = event.values[0] - gravity_1
+            linear_acceleration[1] = event.values[1] - gravity_2
+            linear_acceleration[2] = event.values[2] - gravity_3
+
+            axi_x.text = linear_acceleration[0].toString();
+            axi_y.text = linear_acceleration[1].toString();
+            axi_z.text = linear_acceleration[2].toString();
+        }
+
+        override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
+            TODO("Not yet implemented")
+        }
+    }*/
+
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
@@ -125,6 +180,14 @@ class Juego : AppCompatActivity() {
         textViewTouchEvent.text = action
         touchEventHistory.add(0, historyEntry)
         historyAdapter.notifyDataSetChanged()
+    }
+
+    override fun onSensorChanged(p0: SensorEvent?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
+        TODO("Not yet implemented")
     }
 
 
