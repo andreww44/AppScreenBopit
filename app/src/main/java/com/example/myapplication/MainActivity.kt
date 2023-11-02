@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         gameButton.setOnClickListener{
             startActivity(intentGame);
             //checkPermisions(, ACTIVITY_FFF)
-            checkPermisions(com.example.myapplication.Manifest.permission., ACTIVITY_FFF)
+            //checkPermisions(com.example.myapplication.Manifest.permission., ACTIVITY_FFF)
         }
 
 

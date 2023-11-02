@@ -30,7 +30,7 @@ class Juego : AppCompatActivity(), SensorEventListener {
     private lateinit var bVictory: Button
     private lateinit var bDefeat: Button
 
-    private lateinit var linear_acceleration: Array<Double>
+    private val linear_acceleration = DoubleArray(3) { 0.0 }
 
     private lateinit var gestureDetector: GestureDetector
 
@@ -57,9 +57,7 @@ class Juego : AppCompatActivity(), SensorEventListener {
 
         gestureDetector = GestureDetector(this, GestureListener())
 
-        if(sensor != null){
-            finish();
-        }
+
         val a = sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
 
         //ToolBar
@@ -168,7 +166,6 @@ class Juego : AppCompatActivity(), SensorEventListener {
         }
 
         override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
-            TODO("Not yet implemented")
         }
     }*/
 
@@ -183,11 +180,29 @@ class Juego : AppCompatActivity(), SensorEventListener {
     }
 
     override fun onSensorChanged(p0: SensorEvent?) {
-        TODO("Not yet implemented")
+        val alpha: Float = 0.8f
+        var gravity = 9.8;
+
+        if(p0 != null){
+            var gravity_1 = alpha * gravity + (1 - alpha) * p0.values[0]
+            var gravity_2 = alpha * gravity + (1 - alpha) * p0.values[1]
+            var gravity_3 = alpha * gravity + (1 - alpha) * p0.values[2]
+
+            // Remove the gravity contribution with the high-pass filter.
+            linear_acceleration[0] = p0.values[0] - gravity_1
+            linear_acceleration[1] = p0.values[1] - gravity_2
+            linear_acceleration[2] = p0.values[2] - gravity_3
+
+            axi_x.text = linear_acceleration[0].toString();
+            axi_y.text = linear_acceleration[1].toString();
+            axi_z.text = linear_acceleration[2].toString();
+        }
+        // Isolate the force of gravity with the low-pass filter. val gravity[3]: Float;
+
     }
 
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
-        TODO("Not yet implemented")
+
     }
 
 
