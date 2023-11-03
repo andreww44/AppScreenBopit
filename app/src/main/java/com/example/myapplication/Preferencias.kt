@@ -21,7 +21,7 @@ class Preferencias : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar2))
 
         val loginButton = findViewById<Button>(R.id.Login)
-
+        /*
         val user = findViewById<EditText>(R.id.UserLog);
         val password = findViewById<EditText>(R.id.Password);
         val userlog = findViewById<TextView>(R.id.User);
@@ -35,7 +35,7 @@ class Preferencias : AppCompatActivity() {
                 userlog.setText("Contraseña Incorrecta")
             }
 
-        }
+        }*/
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

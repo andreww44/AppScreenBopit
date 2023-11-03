@@ -7,6 +7,8 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.widget.ArrayAdapter
@@ -15,6 +17,7 @@ import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import java.util.Random
 
 private const val DEBUG_TAG = "Gestures"
 class Juego : AppCompatActivity(), SensorEventListener {
@@ -29,54 +32,57 @@ class Juego : AppCompatActivity(), SensorEventListener {
     private lateinit var bStop: Button
     private lateinit var bVictory: Button
     private lateinit var bDefeat: Button
+    public var currentNumer = 0
+    public var next = false;
 
     private val linear_acceleration = DoubleArray(3) { 0.0 }
 
     private lateinit var gestureDetector: GestureDetector
 
     private lateinit var textViewTouchEvent: TextView
-    private lateinit var listViewTouchEventHistory: ListView
-    private lateinit var touchEventHistory: ArrayList<String>
-    private lateinit var historyAdapter: ArrayAdapter<String>
-
+    private lateinit var bopi: TextView
+    private lateinit var textViewRun: TextView
 
     private lateinit var sensorManager: SensorManager
     private lateinit var sensor: Sensor
-    //private lateinit var sensorEventListener: SensorEventListener
-    //ivate lateinit var sensorEventLsitener: SensorEventListener
 
     private lateinit var axi_x: TextView
     private lateinit var axi_y: TextView
     private lateinit var axi_z: TextView
+
+
+    //Tiempoo
+
+    private var timeInterval = 3000L // Initial time interval, set to 3 seconds (3000 milliseconds)
+    private val handler = Handler(Looper.getMainLooper())
+    private var count  = 0
+    private lateinit var updateText: Runnable
+
+    private val acciones = Array<String>(3){"Shakeit"; "Flingit"; "DoubleTouchIt"}
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_juego)
+
 
         sensorManager =getSystemService(Context.SENSOR_SERVICE) as SensorManager
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
         gestureDetector = GestureDetector(this, GestureListener())
 
-
         val a = sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
-
-        //ToolBar
-        setSupportActionBar(findViewById(R.id.toolbar3))
 
         //Crear Lsita
         textViewTouchEvent = findViewById(R.id.textViewTouchEvent)
-        listViewTouchEventHistory = findViewById(R.id.listViewTouchEventHistory)
+        textViewRun = findViewById(R.id.textrun)
 
         axi_x = findViewById(R.id.AxiX)
         axi_y = findViewById(R.id.AxiY)
         axi_z = findViewById(R.id.AxiZ)
 
-        touchEventHistory = ArrayList()
-        historyAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, touchEventHistory)
-        listViewTouchEventHistory.adapter = historyAdapter
+        bopi = findViewById(R.id.bopi)
 
         //MediaPlayer
-        backMusic = MediaPlayer.create(applicationContext, R.raw.laser)
+        backMusic = MediaPlayer.create(applicationContext, R.raw.loopbopit)
         defeatSong = MediaPlayer.create(applicationContext, R.raw.fallo)
         victorySong = MediaPlayer.create(applicationContext, R.raw.victoria)
 
@@ -88,7 +94,12 @@ class Juego : AppCompatActivity(), SensorEventListener {
         backMusic.start()
         backMusic.isLooping = true;
 
-        //sensor.
+
+        updateText = updateTextRunnable
+
+
+
+        decreaseTimeDelay()
 
     }
 
@@ -136,47 +147,32 @@ class Juego : AppCompatActivity(), SensorEventListener {
             e1: MotionEvent, e2: MotionEvent,
             velocityX: Float, velocityY: Float
         ): Boolean {
-            showToast("onFling")
-            addToList("onFling")
+            showToast("Flingit")
+            textViewTouchEvent.text = "Flinit";
+            if(currentNumer == 2)
+            {
+                bopi.text = "Bopit"
+                next = true;
+                //decreaseTimeDelay()
+            }
             return true
         }
+
+        override fun onDoubleTap(e: MotionEvent): Boolean {
+            showToast("DoubleTouch")
+            textViewTouchEvent.text = "Doubleit";
+            if(currentNumer == 3)
+            {
+                bopi.text = "Bopit"
+                next = true;
+                //decreaseTimeDelay()
+            }
+            return super.onDoubleTap(e)
+        }
     }
-
-    /*
-    inner class sensorEventListener: SensorEventListener{
-
-        override fun onSensorChanged(event: SensorEvent) {
-
-            val alpha: Float = 0.8f
-            var gravity = 9.8;
-
-            // Isolate the force of gravity with the low-pass filter. val gravity[3]: Float;
-            var gravity_1 = alpha * gravity + (1 - alpha) * event.values[0]
-            var gravity_2 = alpha * gravity + (1 - alpha) * event.values[1]
-            var gravity_3 = alpha * gravity + (1 - alpha) * event.values[2]
-
-            // Remove the gravity contribution with the high-pass filter.
-            linear_acceleration[0] = event.values[0] - gravity_1
-            linear_acceleration[1] = event.values[1] - gravity_2
-            linear_acceleration[2] = event.values[2] - gravity_3
-
-            axi_x.text = linear_acceleration[0].toString();
-            axi_y.text = linear_acceleration[1].toString();
-            axi_z.text = linear_acceleration[2].toString();
-        }
-
-        override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
-        }
-    }*/
 
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
-    private fun addToList(action: String){
-        val historyEntry = "Action: $action"
-        textViewTouchEvent.text = action
-        touchEventHistory.add(0, historyEntry)
-        historyAdapter.notifyDataSetChanged()
     }
 
     override fun onSensorChanged(p0: SensorEvent?) {
@@ -193,9 +189,9 @@ class Juego : AppCompatActivity(), SensorEventListener {
             linear_acceleration[1] = p0.values[1] - gravity_2
             linear_acceleration[2] = p0.values[2] - gravity_3
 
-            axi_x.text = linear_acceleration[0].toString();
-            axi_y.text = linear_acceleration[1].toString();
-            axi_z.text = linear_acceleration[2].toString();
+            axi_x.text = "X = " + linear_acceleration[0].toString();
+            axi_y.text = "Y = " + linear_acceleration[1].toString();
+            axi_z.text = "Z = " + linear_acceleration[2].toString();
         }
         // Isolate the force of gravity with the low-pass filter. val gravity[3]: Float;
 
@@ -206,6 +202,38 @@ class Juego : AppCompatActivity(), SensorEventListener {
     }
 
 
+    private val updateTextRunnable = object : Runnable {
+        override fun run() {
+            textViewRun.text = changeInstruction() + " (" + timeInterval.toString() + " )"
+            handler.postDelayed(updateText, timeInterval)
+        }
+    }
+
+    private fun changeInstruction() : String? {
+        val random = Random()
+        val randomIndex = random.nextInt(acciones.size)
+        currentNumer = randomIndex + 1;
+        return acciones[randomIndex]
+    }
+
+    private fun decreaseTimeDelay() {
+        count += 1
+        if (count == 3) {
+            handler.removeCallbacks(updateText)
+            return
+        }
+        timeInterval -= 500L
+        handler.removeCallbacks(updateText) // Remove previous callbacks
+        handler.postDelayed(updateText, timeInterval)
+    }
+
+    private fun GameLoop() {
+        next = false;
+        if(next == true){
+            decreaseTimeDelay();
+        }
+
+    }
 }
 
 
