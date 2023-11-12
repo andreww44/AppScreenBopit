@@ -75,14 +75,8 @@ class Juego : AppCompatActivity(), SensorEventListener {
 
         val a = sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
 
-        //Crear Lsita
-       
-
-
-
         //MediaPlayer --- AudioCall
         mediaCallSounds()
-
 
         backMusic.start()
         backMusic.isLooping = true;

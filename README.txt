@@ -4,9 +4,5 @@ Es una replica digital del juego Bopit de la compañia Hasbro pero para celulare
 
 https://github.com/andreww44/AppScreenBopit.git
 
-En la activity de preferences
-
-https://youtu.be/Djr6cOyOd64 Video
+https://youtu.be/kqe2WIyHodQ Video Actualizado
 El apk se encuentra en la carpeta del git
-User = Alvaro
-Password = 1234
