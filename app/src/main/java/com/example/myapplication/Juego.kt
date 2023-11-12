@@ -76,7 +76,7 @@ class Juego : AppCompatActivity(), SensorEventListener {
         val a = sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
 
         //Crear Lsita
-        textViewTouchEvent = findViewById(R.id.textViewTouchEvent)
+       
 
 
 
