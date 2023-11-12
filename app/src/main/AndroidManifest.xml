@@ -31,9 +31,6 @@
             android:name=".Preferencias"
             android:exported="false" />
         <activity
-            android:name=".Instrucciones"
-            android:exported="false" />
-        <activity
             android:name=".Historial"
             android:exported="false" />
         <activity

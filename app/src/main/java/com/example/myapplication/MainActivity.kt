@@ -32,7 +32,6 @@ class MainActivity : AppCompatActivity() {
         exitButton.setOnClickListener{
             finish()
             exitProcess(0)
-
         }
 
         //Game Intent
@@ -42,37 +41,11 @@ class MainActivity : AppCompatActivity() {
         //Preguntar por permisos
         gameButton.setOnClickListener{
             startActivity(intentGame);
-            //checkPermisions(, ACTIVITY_FFF)
-            //checkPermisions(com.example.myapplication.Manifest.permission., ACTIVITY_FFF)
-        }
-
-
-    }
-
-    fun checkPermisions(permisson: String, requestCode: Int){
-        if(ContextCompat.checkSelfPermission(this, permisson) == PackageManager.PERMISSION_DENIED){
-            ActivityCompat.requestPermissions(this, arrayOf(permisson), requestCode)
-        }else{
-            Toast.makeText(this, "Permision already granted", Toast.LENGTH_SHORT).show()
-        }
-
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode== ACTIVITY_FFF){
-            if(grantResults.isNotEmpty()&&grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                Toast.makeText(this, "Permision granted", Toast.LENGTH_SHORT).show()
-            }else{
-                Toast.makeText(this, "Denie", Toast.LENGTH_SHORT).show()
-            }
-
+            finish()
         }
     }
+
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
         return super.onCreateOptionsMenu(menu)

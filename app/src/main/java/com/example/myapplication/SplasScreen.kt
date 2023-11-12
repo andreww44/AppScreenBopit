@@ -52,15 +52,6 @@ class SplasScreen : AppCompatActivity() {
             }
         })
         imageView.startAnimation(fadeIn)
-        val seconds = value?.toLong()
-        val delayMillis = seconds!!.toLong()
 
-        val handler = Handler(Looper.getMainLooper())
-        handler.postDelayed({
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-
-        }, delayMillis)
     }
 }

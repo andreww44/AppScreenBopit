@@ -1,6 +1,8 @@
 package com.example.myapplication
 
 import android.content.Context
+import android.content.Intent
+import android.graphics.Color
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -9,17 +11,24 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.MediaStore.Audio.Media
 import android.view.GestureDetector
 import android.view.MotionEvent
-import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.ListView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.lang.Math.abs
 import java.util.Random
 
 private const val DEBUG_TAG = "Gestures"
+
+val Context.dataStore by preferencesDataStore(name = "USER_PREFERENCES_NAME")
 class Juego : AppCompatActivity(), SensorEventListener {
 
     private var musicOn = true;
@@ -27,38 +36,33 @@ class Juego : AppCompatActivity(), SensorEventListener {
     private lateinit var victorySong: MediaPlayer;
     private lateinit var defeatSong: MediaPlayer
     private lateinit var backMusic: MediaPlayer;
-
-    private lateinit var bPlay: Button
-    private lateinit var bStop: Button
-    private lateinit var bVictory: Button
-    private lateinit var bDefeat: Button
-    public var currentNumer = 0
-    public var next = false;
+    private lateinit var doubleSound: MediaPlayer;
+    private lateinit var downitSound: MediaPlayer
+    private lateinit var flingitSound: MediaPlayer;
+    private lateinit var shakeitSound: MediaPlayer;
+    private lateinit var touchitSound: MediaPlayer;
+    private lateinit var niceTrySound: MediaPlayer;
 
     private val linear_acceleration = DoubleArray(3) { 0.0 }
 
     private lateinit var gestureDetector: GestureDetector
 
     private lateinit var textViewTouchEvent: TextView
-    private lateinit var bopi: TextView
-    private lateinit var textViewRun: TextView
 
     private lateinit var sensorManager: SensorManager
     private lateinit var sensor: Sensor
 
-    private lateinit var axi_x: TextView
-    private lateinit var axi_y: TextView
-    private lateinit var axi_z: TextView
+    private val acciones = arrayOf( "Fling-it", "DoubleTouch-It", "Down-IT!!", "Tap-It", "Shake-IT")
+    private val random = Random()
+    private var timeGame = 5000L;
+    private var currentNumber = 0
 
+    private var next = false
+    private lateinit var gameText: TextView
+    private var gameHandler: Handler = Handler(Looper.getMainLooper())
 
-    //Tiempoo
+    private var score = 0;
 
-    private var timeInterval = 3000L // Initial time interval, set to 3 seconds (3000 milliseconds)
-    private val handler = Handler(Looper.getMainLooper())
-    private var count  = 0
-    private lateinit var updateText: Runnable
-
-    private val acciones = Array<String>(3){"Shakeit"; "Flingit"; "DoubleTouchIt"}
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_juego)
@@ -73,33 +77,28 @@ class Juego : AppCompatActivity(), SensorEventListener {
 
         //Crear Lsita
         textViewTouchEvent = findViewById(R.id.textViewTouchEvent)
-        textViewRun = findViewById(R.id.textrun)
 
-        axi_x = findViewById(R.id.AxiX)
-        axi_y = findViewById(R.id.AxiY)
-        axi_z = findViewById(R.id.AxiZ)
 
-        bopi = findViewById(R.id.bopi)
 
-        //MediaPlayer
-        backMusic = MediaPlayer.create(applicationContext, R.raw.loopbopit)
-        defeatSong = MediaPlayer.create(applicationContext, R.raw.fallo)
-        victorySong = MediaPlayer.create(applicationContext, R.raw.victoria)
+        //MediaPlayer --- AudioCall
+        mediaCallSounds()
 
-        bPlay = findViewById(R.id.playButton)
-        bStop = findViewById(R.id.stopButton)
-        bVictory = findViewById(R.id.victoryButton)
-        bDefeat = findViewById(R.id.defeatButton)
 
         backMusic.start()
         backMusic.isLooping = true;
 
+        //LoopGame
+        gameText = findViewById<TextView>(R.id.textrun);
 
-        updateText = updateTextRunnable
+        currentNumber = abs(random.nextInt(acciones.size))
+        callAction(currentNumber)
 
+        gameText.text = acciones[currentNumber]
 
+        val delayMillis = timeGame.toLong()
+        gameHandler.postDelayed(nextGameRunnable, delayMillis)
+        displayTimerHandler.postDelayed(displayTimerRunnable, displayTimerMillis)
 
-        decreaseTimeDelay()
 
     }
 
@@ -110,28 +109,8 @@ class Juego : AppCompatActivity(), SensorEventListener {
     }
     override fun onResume() {
         super.onResume()
-        bPlay.setOnClickListener{
-            backMusic.start()
-            victorySong.pause()
-            defeatSong.pause()
-            backMusic.isLooping = true;
-        }
-        bStop.setOnClickListener(){
-            backMusic.pause()
-            victorySong.pause()
-            defeatSong.pause()
-        }
-
-        bVictory.setOnClickListener(){
-            victorySong.start()
-            backMusic.pause()
-        }
-
-        bDefeat.setOnClickListener(){
-            defeatSong.start()
-            victorySong.pause();
-        }
-
+        backMusic.start()
+        backMusic.isLooping = true;
     }
 
     override fun onPause() {
@@ -147,33 +126,38 @@ class Juego : AppCompatActivity(), SensorEventListener {
             e1: MotionEvent, e2: MotionEvent,
             velocityX: Float, velocityY: Float
         ): Boolean {
-            showToast("Flingit")
-            textViewTouchEvent.text = "Flinit";
-            if(currentNumer == 2)
+            if(currentNumber == 0 && !next )
             {
-                bopi.text = "Bopit"
-                next = true;
-                //decreaseTimeDelay()
+                winGame();
             }
             return true
         }
 
         override fun onDoubleTap(e: MotionEvent): Boolean {
-            showToast("DoubleTouch")
-            textViewTouchEvent.text = "Doubleit";
-            if(currentNumer == 3)
+            if(currentNumber == 1 && !next)
             {
-                bopi.text = "Bopit"
-                next = true;
-                //decreaseTimeDelay()
+                winGame();
             }
             return super.onDoubleTap(e)
         }
+
+        override fun onDown(e: MotionEvent): Boolean {
+            if(currentNumber == 2 && !next)
+            {
+                winGame();
+            }
+            return true
+        }
+
+        override fun onSingleTapUp(e: MotionEvent): Boolean {
+            if(currentNumber == 3 && !next)
+            {
+                winGame();
+            }
+            return true
+        }
     }
 
-    private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
 
     override fun onSensorChanged(p0: SensorEvent?) {
         val alpha: Float = 0.8f
@@ -189,11 +173,14 @@ class Juego : AppCompatActivity(), SensorEventListener {
             linear_acceleration[1] = p0.values[1] - gravity_2
             linear_acceleration[2] = p0.values[2] - gravity_3
 
-            axi_x.text = "X = " + linear_acceleration[0].toString();
-            axi_y.text = "Y = " + linear_acceleration[1].toString();
-            axi_z.text = "Z = " + linear_acceleration[2].toString();
+            if(linear_acceleration[1] > 1f)
+            {
+                if(currentNumber == 4 && !next)
+                {
+                    winGame()
+                }
+            }
         }
-        // Isolate the force of gravity with the low-pass filter. val gravity[3]: Float;
 
     }
 
@@ -201,39 +188,120 @@ class Juego : AppCompatActivity(), SensorEventListener {
 
     }
 
-
-    private val updateTextRunnable = object : Runnable {
-        override fun run() {
-            textViewRun.text = changeInstruction() + " (" + timeInterval.toString() + " )"
-            handler.postDelayed(updateText, timeInterval)
-        }
-    }
-
-    private fun changeInstruction() : String? {
-        val random = Random()
-        val randomIndex = random.nextInt(acciones.size)
-        currentNumer = randomIndex + 1;
-        return acciones[randomIndex]
-    }
-
-    private fun decreaseTimeDelay() {
-        count += 1
-        if (count == 3) {
-            handler.removeCallbacks(updateText)
-            return
-        }
-        timeInterval -= 500L
-        handler.removeCallbacks(updateText) // Remove previous callbacks
-        handler.postDelayed(updateText, timeInterval)
-    }
+    //GAAAAAMEEEEEEEE
+    private val nextGameRunnable = Runnable { GameLoop() }
 
     private fun GameLoop() {
-        next = false;
-        if(next == true){
-            decreaseTimeDelay();
+
+        if(next)
+        {
+            next = false;
+            gameText.text = acciones[currentNumber]
+            timeGame -= displayTimerMillis
+            displayTime = timeGame.toFloat()/1000
+            gameHandler.postDelayed(nextGameRunnable, timeGame)
+        }
+        else
+        {
+            gameText.setTextColor(Color.RED)
+            backMusic.stop()
+            niceTrySound.start()
+            val customClassScore = customClassScore(this,"Game-Over", score.toString())
+            customClassScore.show();
+
+            //Persistencia de datos
+            lifecycleScope.launch(Dispatchers.IO) {
+                saveScore(score);
+            }
+
+
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed({
+            },10000L)
+            loseGame();
         }
 
     }
+
+    private fun winGame(){
+        gameText.setTextColor(Color.GREEN)
+        next = true
+
+        score += 100
+
+        val prevGame = currentNumber
+        do
+        {
+            currentNumber = abs(random.nextInt(acciones.size))
+        }
+        while (currentNumber == prevGame)
+        callAction(currentNumber)
+        gameHandler.removeCallbacks(nextGameRunnable)
+        gameHandler.postDelayed(nextGameRunnable, 100)
+    }
+
+    private var displayTime: Float = timeGame.toFloat()/1000
+    private val displayTimerMillis: Long = 100
+    private val displayTimerHandler: Handler = Handler(Looper.getMainLooper())
+
+    private val displayTimerRunnable = Runnable {
+        displayTime -= 0.1f;
+        displayTime = Math.max(displayTime, 0f)
+        callDisplayTime()
+    }
+
+    private fun callDisplayTime()
+    {
+        displayTimerHandler.postDelayed(displayTimerRunnable, displayTimerMillis)
+    }
+
+    private fun mediaCallSounds(){
+        backMusic = MediaPlayer.create(applicationContext, R.raw.loopbopit)
+        defeatSong = MediaPlayer.create(applicationContext, R.raw.fallo)
+        victorySong = MediaPlayer.create(applicationContext, R.raw.victoria)
+        doubleSound = MediaPlayer.create(applicationContext, R.raw.doubleit)
+        downitSound = MediaPlayer.create(applicationContext, R.raw.downit)
+        flingitSound = MediaPlayer.create(applicationContext, R.raw.flingit)
+        shakeitSound = MediaPlayer.create(applicationContext, R.raw.shakeit)
+        touchitSound = MediaPlayer.create(applicationContext, R.raw.touchit)
+        niceTrySound = MediaPlayer.create(applicationContext, R.raw.nicetry)
+    }
+
+    private fun callAction(n: Int){
+        if(n == 0){
+            flingitSound.start()
+        } else if(n == 1){
+            doubleSound.start()
+        }else if(n == 2){
+            downitSound.start()
+        }else if(n == 3){
+            touchitSound.start()
+        }else if(n == 4){
+            shakeitSound.start()
+        }
+    }
+
+    private fun loseGame(){
+        val value = 4000
+        val delayMillis = value.toLong()
+
+        val handler = Handler(Looper.getMainLooper())
+        handler.postDelayed({
+
+
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }, delayMillis)
+    }
+
+    private suspend fun saveScore(score:Int){
+        dataStore.edit {preferences->
+            preferences[intPreferencesKey("puntaje")] = score
+
+        }
+    }
+
 }
 
 
